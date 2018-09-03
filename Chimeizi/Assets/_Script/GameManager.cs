@@ -3,6 +3,7 @@ using UnityEngine;
 using ExitGames.Client.Photon;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System;
 public enum RoundType
 {
     None,
@@ -37,7 +38,7 @@ public class GameManager : Photon.PunBehaviour
     public Player myPlayer;
     public Player targetPlayer;
     public List<Item> items = new List<Item>();
-
+    public List<Player> creatObj = new List<Player>();
     public bool playerIsGod = false;
     #endregion
     #region private value
@@ -169,7 +170,7 @@ public class GameManager : Photon.PunBehaviour
 
     void SetPlayer()
     {
-        int r = Random.Range(0, MapData.instance.roomCount);
+        int r = UnityEngine.Random.Range(0, MapData.instance.roomCount);
         MapData.instance.SetPlayerToRoom(PhotonNetwork.player.ID, myPlayer.transform, MapData.instance.roomNameDict[r]);
         myPlayer.myRoom = MapData.instance.roomNameDict[r];
         vm.SetMyRoomName(MapData.instance.roomNameDict[r]);
@@ -354,9 +355,9 @@ public class GameManager : Photon.PunBehaviour
         {
             allocateFood = (int)(mainFood * 0.3f);
         }
-        int r1 = Random.Range(0, MapData.instance.roomCount);
-        int r2 = Random.Range(0, MapData.instance.roomCount);
-        int r3 = Random.Range(0, MapData.instance.roomCount);
+        int r1 = UnityEngine.Random.Range(0, MapData.instance.roomCount);
+        int r2 = UnityEngine.Random.Range(0, MapData.instance.roomCount);
+        int r3 = UnityEngine.Random.Range(0, MapData.instance.roomCount);
         if (allocateFood == 0)
         {
             return;
@@ -385,7 +386,7 @@ public class GameManager : Photon.PunBehaviour
         {
             return;
         }
-        int r = Random.Range(1, PhotonNetwork.playerList.Length + 1);
+        int r = UnityEngine.Random.Range(1, PhotonNetwork.playerList.Length + 1);
         photonView.RPC("SetWolfReceive", PhotonTargets.All, r);
     }
     [PunRPC]
@@ -397,7 +398,58 @@ public class GameManager : Photon.PunBehaviour
             vm.changeBtn.SetActive(true);
         }
     }
+    public void SetOtherRandomRoom()
+    {
+        photonView.RPC("SetRandomRoom", PhotonTargets.Others);
+    }
+    [PunRPC]
+    public void SetRandomRoom()
+    {
+        string room = MapData.instance.roomNameDict[UnityEngine.Random.Range(0, 7)];
+        vm.ShowNotice("被打飞到了" + room);
+        MapData.instance.SetPlayerToRoom(PhotonNetwork.player.ID, myPlayer.transform, room);
+    }
+    public void AddCrazyToOther(string name)
+    {
+        photonView.RPC("AddCrazy", PhotonTargets.Others, name);
+    }
+    [PunRPC]
+    public void AddCrazy(string hanyuuRoom)
+    {
+        if (myPlayer.myHeroName != myHero)
+        {
+            return;
+        }
+        if (myPlayer.myRoom != hanyuuRoom)
+        {
+            return;
+        }
+        myPlayer.crazy++;
+        switch (myPlayer.crazy)
+        {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                vm.ShowNotice("房间里的暗处好像有什么");
+                break;
+            case 4:
+                vm.ShowNotice("疯狂层数似乎清零了");
+                int r = UnityEngine.Random.Range(0, 10);
+                if (r == 0)
+                {
+                    myPlayer.crazy = 0;
+                }
+                break;
+            case 5:
+                break;
+            default:
+                break;
+        }
 
+    }
+    
     #endregion
 
     #region button func
@@ -488,4 +540,6 @@ public class GameManager : Photon.PunBehaviour
         player.GetComponent<Animator>().SetBool(trigger, bool.Parse(b));
     }
     #endregion
+
+   
 }

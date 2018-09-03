@@ -10,37 +10,48 @@ public class Food : Photon.PunBehaviour
     private void Start()
     {
         GameManager.instance.OnDayMoveEvent += Use;
+        GameManager.instance.OnTwilightMoveEvent += Use;
+        GameManager.instance.OnNightMoveEvent += Use;
     }
     public void SetHugNumber(int hug)
     {
         hugNumber = hug;
-        text.text = hugNumber.ToString();
+        text.text = (hugNumber*5).ToString();
     }
     public void Dead()
     {
         GameManager.instance.OnDayMoveEvent -= Use;
-        PhotonNetwork.Destroy(gameObject);
+        GameManager.instance.OnTwilightMoveEvent -= Use;
+        GameManager.instance.OnNightMoveEvent -= Use;
+        try
+        {
+            PhotonNetwork.Destroy(gameObject);
+        }
+        catch { }
     }
     public void Use()
     {
-        List<Player> player = GameManager.instance.GetAllPlayer();
-        List<Player> roomPlayer = new List<Player>();
-        foreach (var item in player)
-        {
-            if (item.myRoom == myRoom)
-            {
-                roomPlayer.Add(item);
-            }
-        }
-        if (roomPlayer.Count == 0)
+        List<Player> player = GameManager.instance.GetRoomPlayer();
+        if (player.Count == 0)
         {
             return;
         }
-        int perPlayerHug = (int)(hugNumber / roomPlayer.Count);
-        foreach (var item in roomPlayer)
+        int perPlayerHug = (int)(hugNumber*5 / player.Count);
+        foreach (var item in player)
         {
+            if (myRoom!=item.myRoom)
+            {
+                return;
+            }
+            Debug.Log(item.myHeroName + "增加" + perPlayerHug);
             item.AddHug(perPlayerHug);
         }
-        PhotonNetwork.Destroy(gameObject);
+        
+        try
+        {
+            PhotonNetwork.Instantiate("Hearts", transform.position, Quaternion.identity, 0);
+            PhotonNetwork.Destroy(gameObject);
+        }
+        catch { }
     }
 }

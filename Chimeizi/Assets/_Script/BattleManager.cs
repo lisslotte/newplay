@@ -86,11 +86,21 @@ public class BattleManager : Photon.PunBehaviour
             item.sprite = emptyCell;
             item.transform.parent.gameObject.SetActive(false);
         }
+        foreach (var item in leftBattleAtk)
+        {
+            item.text = "";
+        }
         foreach (var item in rightBattleIcon)
         {
             item.sprite = emptyCell;
             item.transform.parent.gameObject.SetActive(false);
         }
+        foreach (var item in rightBattleAtk)
+        {
+            item.text = "";
+        }
+        leftMainAtk.text = "";
+        rightMainAtk.text = "";
         offensivePlayer.Clear();
         defendersPlayer.Clear();
     }
@@ -199,8 +209,8 @@ public class BattleManager : Photon.PunBehaviour
         {
             return;
         }
-        int[] offensiveMainAtk = new int[offensivePlayer.Count];
-        int[] defendersMainAtk = new int[defendersPlayer.Count];
+        int[] offensiveMainAtk = new int[7];
+        int[] defendersMainAtk = new int[7];
         for (int i = 0; i < offensivePlayer.Count; i++)
         {
             offensiveMainAtk[i] = Mathf.Clamp(Random.Range(offensivePlayer[i].minAtk, offensivePlayer[i].maxAtk), 0, 100);
@@ -256,6 +266,7 @@ public class BattleManager : Photon.PunBehaviour
             defendersPower += defendersMainAtk[i];
         }
         rightMainAtk.text = defendersPower.ToString();
+        yield return new WaitForSeconds(2f);
         if (offensivePower < defendersPower)
         {
             if (myBattleCamp == BattleCamp.Defenders)
@@ -266,6 +277,13 @@ public class BattleManager : Photon.PunBehaviour
             if (myBattleCamp == BattleCamp.Offensive)
             {
                 GameManager.instance.myPlayer.GoDie();
+            }
+            foreach (var item in GameManager.instance.creatObj)
+            {
+                if (offensivePlayer.Contains(item))
+                {
+                    item.GoDie();
+                }
             }
         }
         else if (offensivePower > defendersPower)
@@ -279,10 +297,24 @@ public class BattleManager : Photon.PunBehaviour
             {
                 GameManager.instance.myPlayer.BattleWin(defendersPlayer.Count);
             }
+            foreach (var item in GameManager.instance.creatObj)
+            {
+                if (defendersPlayer.Contains(item))
+                {
+                    item.GoDie();
+                }
+            }
         }
         else
         {
-            GameManager.instance.myPlayer.GoDie();
+            GameManager.instance.myPlayer.GoDie(); foreach (var item in GameManager.instance.creatObj)
+            {
+                if (offensivePlayer.Contains(item) || defendersPlayer.Contains(item))
+                {
+                    item.GoDie();
+                } 
+               
+            }
         }
         GameManager.instance.vm.BlockInputUI.SetActive(false);
         BattleUI.SetActive(false);

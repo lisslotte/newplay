@@ -34,9 +34,23 @@ public class Aqua : Player
         {
             GameObject zombie = PhotonNetwork.Instantiate("AquaZombie", Vector3.zero, Quaternion.identity, 0);
             var az = zombie.GetComponent<AquaZombie>();
+            GameManager.instance.creatObj.Add(az);
             az.myRoom = myRoom;
-            az.attackList = GameManager.instance.GetRoomPlayer();
-            az.attackList.Remove(az);
+            var ps = GameManager.instance.GetRoomPlayer();
+            var deads = new Queue<Player>();
+            foreach (var item in ps)
+            {
+                if (item.playerIsDead)
+                {
+                    deads.Enqueue(item);
+                }
+            }
+            foreach (var item in deads)
+            {
+                ps.Remove(item);
+            }
+            ps.Remove(az);
+            az.attackList = ps;
             az.zonbieNumber = zombieNumber;
             MapData.instance.SetCenterPoint(zombie.transform, GameManager.instance.myPlayer.myRoom);
             zombieNumber++;

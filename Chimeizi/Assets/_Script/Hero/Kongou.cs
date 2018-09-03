@@ -15,19 +15,23 @@ public class Kongou : Player
                 GameManager.instance.vm.ShowNotice("饥饿值不足");
                 return;
             }
-            if (useTime > 2)
+            useTime++;
+            if (useTime > 3)
             {
+                canUseSkill = false;
                 GameManager.instance.vm.ShowNotice("弹药用完了");
                 return;
             }
-            useTime++;
+           
             AddHug(-5);
             GameManager.instance.vm.TagetRoomRegisterAndInit(SelectFire);
         }
         else if (mySkillSelectState == SkillSelectState.Second)
         {
-            if (useTime>0)
+            useTime++;
+            if (useTime>1)
             {
+                canUseSkill = false;
                 GameManager.instance.vm.ShowNotice("弹药用完了");
                 return;
             }
@@ -36,13 +40,13 @@ public class Kongou : Player
     }
     void SelectFire(string room)
     {
-       GameObject bullet = PhotonNetwork.Instantiate("KongouBullet", Vector3.zero, Quaternion.identity, 0);
+       GameObject bullet = PhotonNetwork.Instantiate("KongouCannon", Vector3.zero, Quaternion.identity, 0);
         bullet.GetComponent<KongouBullet>().type = 0;
         bullet.GetComponent<KongouBullet>().room = room;
     }
     void RandomFire()
     {
-        GameObject bullet = PhotonNetwork.Instantiate("KongouBullet", Vector3.zero, Quaternion.identity, 0);
+        GameObject bullet = PhotonNetwork.Instantiate("KongouCannon", Vector3.zero, Quaternion.identity, 0);
         bullet.GetComponent<KongouBullet>().type = 1;
     }
 }

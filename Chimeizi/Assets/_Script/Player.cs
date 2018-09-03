@@ -67,13 +67,13 @@ public class Player : Photon.PunBehaviour, IPunObservable, IOnClickHandler
     #region unity func
     protected void Awake()
     {
+        myHeroName = Model.name.Replace("(Clone)", "");
         DeleGateInit();
         ani = GetComponent<Animator>();
-        myHeroName = Model.name.Replace("(Clone)", "");
     }
     protected virtual void Start()
     {
-       
+
 
         if (GameManager.instance.myHero == myHeroName)
         {
@@ -144,7 +144,7 @@ public class Player : Photon.PunBehaviour, IPunObservable, IOnClickHandler
         nav.enabled = true;
         nav.destination = pos;
         nav.speed = 1.5f;
-        GameManager.instance.SetAnimaBool(walkStr,true);
+        GameManager.instance.SetAnimaBool(walkStr, true);
     }
     void StopNavAnima()
     {
@@ -187,7 +187,7 @@ public class Player : Photon.PunBehaviour, IPunObservable, IOnClickHandler
         GameManager.instance.vm.SetMyRoomName(myRoom);
         MapData.instance.SetPlayerToRoom(PhotonNetwork.player.ID, transform, myRoom);
     }
-
+   
     public void SetPlayerCanChangOrNot(bool can)
     {
         if (!playerIsWolf)
@@ -315,48 +315,14 @@ public class Player : Photon.PunBehaviour, IPunObservable, IOnClickHandler
 
     public virtual void UseSkill()
     {
-        if (!canUseSkill)
-        {
-            return;
-        }
-        GameManager.instance.vm.ShowSkillFace();
-        GameManager.instance.SetAnimaTrigger(atkStr);
+        //if (!canUseSkill)
+        //{
+        //    return;
+        //}
+      //  GameManager.instance.vm.ShowSkillFace();
+        //GameManager.instance.SetAnimaTrigger(atkStr);
     }
-    [PunRPC]
-    public void AddCrazy(string hanyuuRoom)
-    {
-        if (myHeroName != GameManager.instance.myHero)
-        {
-            return;
-        }
-        if (myRoom != hanyuuRoom)
-        {
-            return;
-        }
-        crazy++;
-        switch (crazy)
-        {
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                GameManager.instance.vm.ShowNotice("疯狂层数清零");
-                int r = Random.Range(0, 10);
-                if (r == 0)
-                {
-                    crazy = 0;
-                }
-                break;
-            case 5:
-                break;
-            default:
-                break;
-        }
-
-    }
+   
     void CrazyEffectOnMove()
     {
         if (crazy == 5 && actionPoint == 1)
@@ -374,16 +340,6 @@ public class Player : Photon.PunBehaviour, IPunObservable, IOnClickHandler
         {
             GameManager.instance.vm.ShowNotice("听到诡异的脚步声");
         }
-    }
-    [PunRPC]
-    public void SetRandomRoom(int playerIndex, bool isNear)
-    {
-        if (!PhotonNetwork.player.IsLocal)
-        {
-            return;
-        }
-        string room = MapData.instance.roomNameDict[Random.Range(0, MapData.instance.roomNameDict.Count)];
-        MapData.instance.SetPlayerToRoom(PhotonNetwork.player.ID, transform, room);
     }
     //尸体被摧毁
     public void BodyDestroy()
@@ -436,7 +392,7 @@ public class Player : Photon.PunBehaviour, IPunObservable, IOnClickHandler
         }
         GoRoom();
         actionPoint = Mathf.Clamp(++actionPoint, -10, 2);
-        AddHug(-perHug);
+        AddHug(perHug);
         //狼人变回人
         if (playerIsWolf)
         {

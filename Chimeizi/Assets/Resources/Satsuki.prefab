@@ -1474,7 +1474,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4568560454396394}
-  - component: {fileID: 114127189010122926}
+  - component: {fileID: 114397918437358466}
   - component: {fileID: 114189223215894322}
   - component: {fileID: 95873501640272156}
   - component: {fileID: 114777168240811410}
@@ -5544,52 +5544,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114127189010122926
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1517313519220674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bd58a0eb9abaf34b8aa77f22bed8f80, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: dc3dcbaf11253024a989059f26402c58, type: 3}
-  photo: {fileID: 21300000, guid: dc3dcbaf11253024a989059f26402c58, type: 3}
-  skillFace: {fileID: 21300000, guid: dc3dcbaf11253024a989059f26402c58, type: 3}
-  Model: {fileID: 1517313519220674}
-  firstSkillIcon: {fileID: 21300000, guid: 8e7e8797fe697c24897fad8650bb2d3e, type: 3}
-  secondSkillIcon: {fileID: 21300000, guid: 21118b555a61b4a409ec20ba884cbcda, type: 3}
-  firstSkillName: "\u9C9C\u8840\u6E34\u6C42"
-  SecondSkillName: "\u4EA1\u8005\u7684\u6295\u63B7\u6280\u672F"
-  dieStr: Die
-  damageStr: Damage
-  winStr: Cute
-  atkStr: Atk
-  relifeStr: Relife
-  walkStr: walk
-  minAtk: 15
-  maxAtk: 25
-  hp: 1
-  maxHug: 200
-  hug: 40
-  perHug: -10
-  foodNumber: 4
-  myHeroName: 
-  myRoom: 
-  nextRoomName: 
-  playerIsDead: 0
-  playerIsWolf: 0
-  playerIsChange: 0
-  playerIsMove: 0
-  actionPoint: 0
-  movePoint: 0
-  playerCanChange: 0
-  crazy: 0
-  killPlayerNumber: 0
-  wolfSign: {fileID: 0}
-  mySkillSelectState: 2
 --- !u!114 &114189223215894322
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5610,8 +5564,7 @@ MonoBehaviour:
   onSerializeRigidBodyOption: 2
   ownershipTransfer: 0
   ObservedComponents:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 114777168240811410}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -5633,6 +5586,54 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &114397918437358466
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1517313519220674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e255950c94e40454c8751c5499f76ea2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: dc3dcbaf11253024a989059f26402c58, type: 3}
+  photo: {fileID: 21300000, guid: dc3dcbaf11253024a989059f26402c58, type: 3}
+  skillFace: {fileID: 21300000, guid: dc3dcbaf11253024a989059f26402c58, type: 3}
+  Model: {fileID: 1517313519220674}
+  firstSkillIcon: {fileID: 21300000, guid: 8e7e8797fe697c24897fad8650bb2d3e, type: 3}
+  secondSkillIcon: {fileID: 21300000, guid: 21118b555a61b4a409ec20ba884cbcda, type: 3}
+  firstSkillName: "\u9C9C\u8840\u6E34\u6C42"
+  SecondSkillName: "\u4EA1\u8005\u7684\u6295\u63B7\u6280\u672F"
+  dieStr: Die
+  damageStr: Damage
+  winStr: Cute
+  atkStr: Atk
+  relifeStr: Relife
+  walkStr: walk
+  minAtk: 15
+  maxAtk: 25
+  maxHug: 200
+  hug: 40
+  perHug: -10
+  foodNumber: 4
+  myHeroName: 
+  myRoom: 
+  nextRoomName: 
+  playerIsDead: 0
+  playerIsWolf: 0
+  playerIsChange: 0
+  playerIsMove: 0
+  actionPoint: 0
+  movePoint: 0
+  playerCanChange: 0
+  crazy: 0
+  killPlayerNumber: 0
+  wolfSign: {fileID: 0}
+  mySkillSelectState: 2
+  canUseSkill: 0
+  deadAddAtk: 0
+  hasDeadBody: 0
 --- !u!114 &114406971275023570
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5716,7 +5717,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_PositionModel:
-    SynchronizeEnabled: 0
+    SynchronizeEnabled: 1
     TeleportEnabled: 1
     TeleportIfDistanceGreaterThan: 3
     InterpolateOption: 2
@@ -5772,12 +5773,12 @@ MonoBehaviour:
     ExtrapolateNumberOfStoredPositions: 1
     DrawErrorGizmo: 1
   m_RotationModel:
-    SynchronizeEnabled: 0
+    SynchronizeEnabled: 1
     InterpolateOption: 1
     InterpolateRotateTowardsSpeed: 180
     InterpolateLerpSpeed: 5
   m_ScaleModel:
-    SynchronizeEnabled: 0
+    SynchronizeEnabled: 1
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
@@ -6664,7 +6665,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 1.976}
+  m_AnchoredPosition: {x: -0.262, y: 2.292}
   m_SizeDelta: {x: 2, y: 1.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224746292380111628

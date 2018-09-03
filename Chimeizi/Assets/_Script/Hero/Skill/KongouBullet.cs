@@ -29,20 +29,25 @@ public class KongouBullet : MonoBehaviour
     }
     void Fire()
     {
+        GameManager.instance.OnRoundChange -= Fire;
         if (type == 0)
         {
-            FireToRoom(room);
+          StartCoroutine(FireToRoom(room));
         }
         else
         {
             foreach (var item in rooms)
             {
-                FireToRoom(item);
+                StartCoroutine(FireToRoom(item));
             }
         }
+
+        try { Destroy(gameObject, 5f); } catch { }
     }
-    void FireToRoom(string room)
+    IEnumerator FireToRoom(string room)
     {
+        yield return new WaitForSeconds(3f);
+        PhotonNetwork.Instantiate("KongouBullet", MapData.instance.centerPointDict[room], Quaternion.identity, 0);
         foreach (var item in GameManager.instance.GetAllFood())
         {
             if (item.myRoom == room)

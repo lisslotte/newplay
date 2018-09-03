@@ -4,17 +4,30 @@ using UnityEngine;
 
 public class Misaka : Player
 {
+    public bool isreadyFirst = true;
+    public bool canUseTwo = true;
     public override void UseSkill()
     {
-        base.UseSkill();
+        
         if (mySkillSelectState == SkillSelectState.First)
         {
-            SkillFirstBtn();
+            if (isreadyFirst)
+            {
+                base.UseSkill();
+                SkillFirstBtn();
+                isreadyFirst = false;
+            }
+            
         }
         else
         if (mySkillSelectState == SkillSelectState.Second)
         {
-
+            if (canUseTwo)
+            {
+                base.UseSkill();
+                canUseTwo = false;
+                StartCoroutine("SkillSecondFunc");
+            }
         }
     }
     public void SkillFirstBtn()
@@ -35,16 +48,17 @@ public class Misaka : Player
         }
         PhotonNetwork.Instantiate("MisakaCoin", transform.position + Vector3.up * 1.8f, Quaternion.Euler(232, -147, 149), 0);
     }
-    public void SkillSecondBtn()
+   
+   IEnumerator SkillSecondFunc()
     {
-        if (mySkillSelectState != SkillSelectState.Second)
-        {
-            return;
-        }
-        GameManager.instance.vm.TagetPlayerRegisterAndInit(SkillSecondFunc, true, false);
+        PhotonNetwork.Instantiate("MisakaCoin", MapData.instance.centerPointDict[GameManager.instance.myPlayer.myRoom] + 3 * Vector3.up, Quaternion.identity, 0);
+        PhotonNetwork.Instantiate("MisakaCoinBloom", MapData.instance.centerPointDict[GameManager.instance.myPlayer.myRoom], Quaternion.identity, 0);
+        yield return new WaitForSeconds(1f);
+        GameManager.instance.SetOtherRandomRoom();
     }
-    public void SkillSecondFunc(string name)
+    protected override void OnDay()
     {
-        photonView.RPC("SetRandomRoom", PhotonTargets.Others, name, true);
+        base.OnDay();
+        isreadyFirst = true;
     }
 }

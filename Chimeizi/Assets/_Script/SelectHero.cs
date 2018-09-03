@@ -5,12 +5,12 @@ using UnityEngine.UI;
 public class SelectHero : Photon.PunBehaviour
 {
     public Transform heroPanelTrans;
-    public Queue<string> heros = new Queue<string>();
+    public List<string> heros = new List<string>();
     private void Start()
     {
         for (int i = 0; i < heroPanelTrans.childCount; i++)
         {
-            heros.Enqueue(heroPanelTrans.GetChild(i).name);
+            heros.Add(heroPanelTrans.GetChild(i).name);
         }
     }
     public bool selected = false;
@@ -26,10 +26,14 @@ public class SelectHero : Photon.PunBehaviour
     [PunRPC]
     public void OnPlayerRequestHero(string name,int index)
     {
+        if (!PhotonNetwork.isMasterClient)
+        {
+            return;
+        }
         if (heros.Contains(name))
         {
-            string hero = heros.Dequeue();
-            photonView.RPC("OnPlayerSelectHero", PhotonTargets.AllBuffered, name,true,index);
+            heros.Remove(name);
+            photonView.RPC("OnPlayerSelectHero", PhotonTargets.AllBuffered, name, true,index);
         }
         else
         {
@@ -54,7 +58,7 @@ public class SelectHero : Photon.PunBehaviour
             }
             else
             {
-                GameManager.instance.vm.ShowNotice("你所选的英雄已经被别人抢走了");
+                GameManager.instance.vm.ShowNotice(name+"已经被别人抢走了");
             }
         }
         

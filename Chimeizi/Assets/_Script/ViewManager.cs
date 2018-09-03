@@ -396,4 +396,23 @@ public class ViewManager : Photon.PunBehaviour
         GameManager.instance.OnTwilightEvent += CloseMoveUI;
         GameManager.instance.OnNightEvent += CloseMoveUI;
     }
+    [Space]
+    [Header("SaberUI")]
+    #region saber ui
+    public GameObject saberUI;
+    public Saber saber;
+    public void OpenExcaliburUI(Saber saber)
+    {
+        this.saber = saber;
+        saberUI.SetActive(true);
+    }
+    public void ExcaliburBtn(int a)
+    {
+        if (saber)
+        {
+            saber.ExCaliburSet(a);
+        }
+        saberUI.SetActive(false);
+    }
+    #endregion
 }

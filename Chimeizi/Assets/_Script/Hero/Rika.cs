@@ -4,27 +4,22 @@ using UnityEngine;
 using UnityEngine.UI;
 public class Rika : Player
 {
-    public GameObject selectRoomPanel;
     public List<string> relifeRooms = new List<string>();
-    int hasSelect = 0;
 
     protected override void Start()
     {
         base.Start();
-        selectRoomPanel.SetActive(true);
+        SelectRelifeRoom();
     }
-    public void SelectRelifeRoom(string name)
+    public void SelectRelifeRoom()
     {
-        relifeRooms.Add(name);
-        hasSelect++;
-        if (hasSelect == 3)
-        {
-            selectRoomPanel.SetActive(false);
-            if (mySkillSelectState == SkillSelectState.Second)
-            {
-                GameManager.instance.OnRoundChange += HanyuuMove;
-            }
-        }
+        var a = Random.Range(0, 3);
+        var b = Random.Range(3, 5);
+        var c = Random.Range(5, MapData.instance.roomCount);
+        relifeRooms.Add(MapData.instance.roomNameDict[a]);
+        relifeRooms.Add(MapData.instance.roomNameDict[b]);
+        relifeRooms.Add(MapData.instance.roomNameDict[c]);
+        GameManager.instance.vm.ShowNotice("羽入的徘徊地" + relifeRooms[0] + relifeRooms[1] + relifeRooms[2]);
     }
     public override void GoDie()
     {
@@ -36,6 +31,7 @@ public class Rika : Player
             minAtk = Mathf.Clamp(minAtk + 10, minAtk, maxAtk);
             hug = 10;
             PhotonNetwork.Instantiate("ShowEffect", transform.position, Quaternion.identity, 0);
+            GameManager.instance.vm.ShowNotice("你在" + room + "重生了");
         }
         else
         {
@@ -47,6 +43,6 @@ public class Rika : Player
     {
         string hanyuuRoom = relifeRooms[Random.Range(0, relifeRooms.Count)];
         GameManager.instance.vm.ShowNotice("羽入在" + hanyuuRoom);
-        photonView.RPC("AddCrazy", PhotonTargets.Others, hanyuuRoom);
+        GameManager.instance.AddCrazyToOther(hanyuuRoom);
     }
 }
